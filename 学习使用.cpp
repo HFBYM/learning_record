@@ -1,24 +1,62 @@
 #define _CRT_SECURE_NO_WARNINGS 1  //备注与提示
 #include<stdio.h>
 #include<math.h>
-#include<string.h>
-#include<stdlib.h>           //malloc函数  用其构成的二维数组可以传递二级指针而不用数组指针
-#include <conio.h>           //getch 
-#include<easyx.h>            //在项目 配置设置 高级 选择使用多字节
+#include<string.h>           //memset(a,0,sizeof(a)) 将数组a赋值
+#include<thread>             //多线程库
+#include<stdlib.h>           //malloc函数  
+#include <conio.h>           //getch   （c=getchar())要加括号
+#include<easyx.h>            //在项目 配置设置 高级 选择使用多字节 内置了windows.h 延时函数Sleep() 单位毫秒
 #include<mmsystem.h>         //音乐播放  有些mp3格式是假的 无法播放
 #pragma comment(lib,"winmm.lib")   //静态库
-//对于矩形外框 还是每边独立循环好 每次是类似的变换  每边都是i=1 到i=n-1
+using namespace std;         //用标准名 使thread 可用
 
-void E(int(*a)[m], int m, int n)
+void print1()
 {
-	printf("%d", a[m - 1][n - 1]);
+	Sleep(5000);
+	printf("thread 1\n");
+}
+void print2()
+{
+	Sleep(3000);
+	printf("thread 2\n");
 }
 int main()
 {
-	int a[1][2] = { 0 };
-	E(a, 1, 2);
+	thread text1(print1);     
+	thread text2(print2);
+	text1.join();
+	text2.join();
 	return 0;
 }
+
+//int main()
+//{
+//	int* a, n;
+//	scanf("%d", &n);
+//	if (n <= 0)
+//		exit(0);
+//	a = (int*)malloc(n * sizeof(int));
+//	if (a == NULL)
+//		exit(0);
+//
+//	free(a);
+//	return 0;
+//}
+//void F(int* p, int max,int n)
+//{
+//	int i,max,j;
+//	for (max = 1; max <= n; max++)
+//	{
+//		
+//		for (i = 1; i * max <= n; i++)
+//		{
+//			for (j = 1; j <= i; j++,p++)
+//				*p = max;
+//			F(p, max, n - i * max);
+//		}
+//	}
+//
+//}
 
 //easyx内容从此开始
 
@@ -37,7 +75,7 @@ int main()
 //void Bgm()
 //{
 //	mciSendString("open ./鸡.mp3 alias song", 0, 0, 0);       //文件拓展名不要隐藏！！！
-//	mciSendString("play song ", 0, 0, 0);
+//	mciSendString("play song ", 0, 0, 0);                     //有些文件不是真mp3
 //	//wait 等待音乐放完再进行接下来的代码
 //	//repeat 重复播放
 //}
@@ -54,7 +92,7 @@ int main()
 //	while(1)               
 //	{
 //		BeginBatchDraw();   //防止闪图 放在绘图代码的前面和后面 对图片进行缓存处理 有延迟?
-//		setbkcolor(YELLOW);
+//		setbkcolor(YELLOW);  //也可用flushbatchdraw
 //		cleardevice();
 //		putimage(0, 0, &img);
 //		fillcircle(x, y, 10);
@@ -171,8 +209,6 @@ int main()
 //	return 0;
 //}
 
-//以上为easyx基本内容
-
 //void Print1()
 //{
 //	setbkmode(TRANSPARENT);
@@ -231,46 +267,7 @@ int main()
 //	return 0;
 //}
 
-//int main()
-//{
-//	int i, k, count, s;
-//	char c, * b[20] = { 0 };
-//	char* a[] = { (char*)"零",(char*)"壹",(char*)"贰",(char*)"叁",(char*)"肆",(char*)"伍",(char*)"陆",(char*)"柒",(char*)"捌",(char*)"玖" };
-//	char* d[] = { (char*)"仟",(char*)"百",(char*)"拾",(char*)"万",(char*)"亿" };
-//	//字符常量的值和地址是不变的  其地址不能赋给其他变量 但值可以
-//	//最好强制类型转换掉
-//	for (i = 1; (c = getchar()) != '\n'; i++)
-//		b[i - 1] = a[c - 48];
-//	k = --i;
-//	count = 0;
-//	s = 0;
-//	if (k == 9)                      //分块输出
-//		printf("%s亿", b[count++]);  //同样考虑函数的值传递
-//	if (k >= 5)
-//	{
-//		for (i = count + 1; i <= k - count - 4; i++)
-//		{
-//			if (b[i - 1] == "零" && i != k - count - 4)
-//			{
-//				s++;
-//				if (s == 1)
-//					printf("零");
-//			}
-//			else if (b[i - 1] == "零" && i == k - count - 4)
-//				continue;
-//			else
-//			{
-//				printf("%s", b[i - 1]);
-//				printf("%s", d[i - 1 - count]);
-//				s = 0;
-//			}
-//		}
-//		printf("万");
-//		count = k - count - 4;
-//		k -= count;
-//	}
-//	for (i = count + 1; i <= )
-//}
+//以上为easyx基本内容
 
 //int main()              //龟兔赛跑  分阶段性判断求法
 //{
@@ -410,21 +407,34 @@ int main()
 //	return 0;
 //}
 
+//多线程的使用 包含thread 并且using namespace std
+//创建了线程不用会报错 一个线程只能join一次 该处所有子线程执行完在执行主线程 会卡住主线程
+//.detach将子线程和主线程分离运行 把子线程驻留后台 此后不能再join了
+//joinable()判断是否可以join或detach 可以为true 不可以为false
+//函数创造线程 不好传参
+
+//scanf的高级用法 一 指定长度 scanf("%10d",&a)
+// 二 匹配特定的字符 scanf("%[a-zA-Z]",&a) 不匹配某些特点字符 scanf("%[^\n]",&a) 即除换行符以外
+// 三 丢弃某些字符 scanf("%*d") scanf("%*[a-z]") scanf("%*[^\n]") scanf("%*c") 即清空缓存区
+
+// 对于矩形外框 还是每边独立循环好 每次是类似的变换  每边都是i = 1 到i = n - 1
+
+//malloc函数要检测输入的行或列数是否为正
+//用其构成的二维数组可以传递二级指针而不用数组指针
+
 //行指针引用一次变成位指针（即某位数的地址） 再引用一次变成数
 //区分多维数组与一维数组的首地址类型 前者要低一次（此时只有位指针）
-//字符串常量的本质表示其实是一个地址
+// strcpy(s,s+1)可以实现对字符串的删减 尝试用指针移位进行for循环和指针函数
+//字符串的表示类型相似于字符指针  sizeof(str)表示其开辟空间大小  将其首地址加n 可对后面的部分表示
+//字符指针和字符数组存字符串的区别是 前者先开辟字符串，然后把其首地址的值给到指针 
+//        搞清楚哪些是不变的         后者先开辟变量 再对变量赋值
 
-//递归调用从外往里 运行从里往外
+//递归调用从外往里 运行从里往外 void 函数结束递归用return就行
 //a>b>c  从左向右运算
 //可用(T - t > 10 ? 10 : T - t)来替换取最值函数
 
 //-6%5=-1  6%-5=1 -5%6=-5 5%-6=5 只由第一个数确定正负 然后正常运算
 //左右两端必须是整型
-
-
-//数组下标从0开始
-//数组可相当于数列 f[i+2]=f[i+1]+f[i] 可以把每次变化的值存下来
-
 
 //正数原码 补码 反码相等  负数原码取反加一为补码
 
@@ -432,18 +442,14 @@ int main()
 //              计算混合类型表达式时 往高精度变 结果也是高精度的
 //强制类型转换：(double)sum/count=3.147   (double)(sum/count)=3.000
 
-//若i为三位数，则百位a=(int)i/100,十位b=(i-a*100)/10,个位c=i%10 可避免多重循环
-//但若对每个位都有范围要求，则用多重循环更便于控制，且可直接把数字打在一起而不用计算总数
-//用If放在for之前作判断可以减少循环次数
-
 //用fabs(x)与1e-6的比较判断x是否为0
 //控制正负交替：j *=-1 或 if语句 i%2==0 控制奇偶项
 
-//continue 跳过未执行的循环体，直接进行表达式3运算
+//continue 跳过未执行的循环体，直接进行表达式3运算  使用时注意是否需要进行表达式3
 //break 跳出当前一重循环,不执行表达式三，执行循环的下一个语句，注意跳出多重循环时限定条件 不可跳出goto循环
 //goto语句可直接跳出多重循环至被标注部分 但被标注语句参与正常运行 
 //for循环中判别变量若外定义，可被保留并在外改变；若内定义则不行
-//for语句的判别式可跟while语句一样
+//for语句的判别式可跟while语句一样     注意在执行语句时避免死循环！！
 //do-while 最后要加分号
 // return 是终止整个函数 跟continue break 有相似之处
 // while(a=5) 是先赋值 再判断a的真假 一般是死循环
@@ -453,16 +459,6 @@ int main()
 //printf("%-3d%3d", a, 50);
 //	double x = 20.402;
 //printf("%10.2f\n", x);  //小数总体10位 保留小数2位
-//scanf里面可以有中文
-//输出字符串时%s a 不用方括号
-
-//转义字符在字符串存储和打印时都要考虑
-// 0——数字零 '0' 字符零 '\0'转义字符
-//char arr[] =  "c:\\test\\32\\test.c";
-//printf("%s", arr);
-//getchar()可以用来消回车 按下回车时回车与数字、空格一起进入内存缓存区
-//%c可以识别转义字符，如回车
-//注意空语句的使用
 
 //先变后用 用在当前逗号或分号
 // 先用后变，变的值在下个分号或逗号

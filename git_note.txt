@@ -10,7 +10,7 @@ Git 指令：
 	系统级配置在git安装文件里		本地的全局配置在自己的用户里面
 	可以在用户目录下面创建.bashrc文件 在里面为指令写上别名
 
-创建本地仓库两种方式: 1. git clone (GitHub上的地址)	2. git init
+创建本地仓库两种方式: 1. git clone (GitHub上的地址) 会同时init和创建网址别名	2. git init
 	git status 查看当前目录状态
 	git add abc.txt 放入暂存区 git add .	将全部文件放入暂存区
 	git commit -m "备注"		将暂存区中的全部发到本地仓库
@@ -30,4 +30,8 @@ Git 指令：
 
 远程使用：
 	git remote -v 查看是否有网址别名 如果没有 用 git remote add 别名 地址 别名最好与远程库名字一样
-	git push 别名 本地分支
+	git push 别名 本地分支 把本地的上传 只有是库的成员才能上传	git pull 别名 远程分支 把远程的拉取进来
+	免密登录：1、在指定用户中打开gitbash 输入 ssh-keygen -t rsa -C 邮箱 三次回车
+			 2、进入.ssh 复制公钥(pub)
+			 3、进入github账号的设置 进入sshkey并加入设置
+			 4、利用ssh拉去代码并确定保存

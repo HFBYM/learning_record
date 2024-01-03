@@ -8,7 +8,7 @@ Git 指令：
 						git config --global user.name "Clare"
 						it config --global user.email "10090535708@qq.com"
 	系统级配置在git安装文件里		本地的全局配置在自己的用户里面
-	可以在用户目录下面创建.bashrc文件 在里面写上别名
+	可以在用户目录下面创建.bashrc文件 在里面为指令写上别名
 
 创建本地仓库两种方式: 1. git clone (GitHub上的地址)	2. git init
 	git status 查看当前目录状态
@@ -26,4 +26,8 @@ Git 指令：
 分支使用：
 	git branch 查看当前项目的分支和当前正在使用的分支	-r 查看远程分支	直接加分支名可以创建分支
 	git checkout 切换到分支 -b develop 创建一个develop分支并切换到 这个分支会复制母支的提交 		-d 删除分支	-dr 删除远程分支
-	在master分支上使用 git merge develop合并分支
+	在master分支上使用 git merge develop合并分支 合并后分支不会被删除
+
+远程使用：
+	git remote -v 查看是否有网址别名 如果没有 用 git remote add 别名 地址 别名最好与远程库名字一样
+	git push 别名 本地分支

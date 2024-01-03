@@ -18,7 +18,7 @@ Git 指令：
 
 有时候不需要把一些版本纳入版本控制中 在主文件目录下创建.gitingnore 让git忽略满足规则的文件 规则如下：
 	1. #为注释	2.*.txt 为.txt文件 *指代任意字符	3.！lib.txt	表示例外规则	 4./temp 当前目录下的temp文件夹 5.build/ 所有build文件夹	
-	filename/ 表示文件夹本身与里面内容(文件夹最好用/结尾) filename/:表示这个文件夹的壳子
+	filename/ 表示文件夹本身与里面内容(文件夹最好用/结尾) filename/:当前目录下这个文件夹的壳子 不好得到任意文件夹的壳子
 	一般模板：/*忽略所有文件 !*/只保留文件夹的壳子 !*.txt需要留下的文件类型 
 
 	git log 得到提交日志  加上--stat 查看具体修改的哪些文件	 -all 显示所有分支 -graph 以图的方式 -pretty=oneline一行 -abbrev-commit令id简短

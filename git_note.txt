@@ -11,7 +11,7 @@ Git 指令：
 	可以在用户目录下面创建.bashrc文件 在里面为指令写上别名
 
 创建本地仓库两种方式: 1. git clone (GitHub上的地址) 会同时init和创建网址别名	2. git init
-	git status 查看当前目录状态
+	git status 查看当前目录状态	--ignored 查看被忽略的文件
 	git add abc.txt 放入暂存区 git add .	将全部文件放入暂存区
 	git commit -m "备注"		将暂存区中的全部发到本地仓库
 	git rm --cached <filename>	将暂存区中的一个文件移除暂存区

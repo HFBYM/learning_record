@@ -1,14 +1,13 @@
 git bash Linux风格 git cmd Windows风格 git gui 图形化设计		
-
-cd 改变目录 cd ..回退目录 pwd得到当前目录 clear清屏 ls列出当前目录所有文件 touch 新建文件 rm 移除文件
-mkdir 创建文件夹 rm -r 删除文件夹 mv a b 把a移动到b history 查看历史命令 help 帮助 exit退出
-
-git config -l 列举所有配置			-短命令 --长命令
-首次安装配置:		(git global -e --global)	创造配置文件
-				git config --global user.name "Clare"
-				git config --global user.email "10090535708@qq.com"
-
-系统级配置在git安装文件里		本地的全局配置在自己的用户里面
+Linux指令:
+	cd 改变目录 cd ..回退目录 pwd得到当前目录 clear清屏 ls列出当前目录所有文件 touch 新建文件 rm 移除文件
+	mkdir 创建文件夹 rm -r 删除文件夹 mv a b 把a移动到b history 查看历史命令 help 帮助 exit退出
+Git 指令：
+		git config -l 列举所有配置			-短命令 --长命令
+		首次安装配置:		(git global -e --global)	创造配置文件
+						git config --global user.name "Clare"
+						it config --global user.email "10090535708@qq.com"
+	系统级配置在git安装文件里		本地的全局配置在自己的用户里面
 
 创建本地仓库两种方式: 1. git clone (GitHub上的地址)	2. git init
 	git status 查看当前目录状态
@@ -22,6 +21,8 @@ git config -l 列举所有配置			-短命令 --长命令
 		可以用alias取别名
 	git diff 加上commit id 可以查看这次提交更改了什么内容
 	git reset --hard 加上commit id	回退到某个节点  
+
+分支使用：
 	git branch 查看当前项目的分支和当前正在使用的分支	-r 查看远程分支	直接加分支名可以创建分支
 	git checkout -b develop 创建一个develop分支 或者切换到分支		-d 删除分支	-dr 删除远程分支
 	在master分支上使用 git merge develop合并分支

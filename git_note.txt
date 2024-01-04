@@ -1,6 +1,6 @@
 git bash Linux风格 git cmd Windows风格 git gui 图形化设计		
 Linux指令:
-	cd 改变目录 cd ..回退目录 pwd得到当前目录 clear清屏 ls列出当前目录所有文件 touch 新建文件 rm 移除文件
+	cd 改变目录 cd ..回退目录 pwd得到当前目录 clear清屏 ls列出当前目录所有文件 touch 新建文件 rm 移除文件  ctrl+p 上一条命令
 	mkdir 创建文件夹 rm -r 删除文件夹 mv a b 把a移动到b 对同一个目录下的可以重命名 history 查看历史命令 help 帮助 exit退出
 Git 指令：
 		git config -l 列举所有配置			-短命令 --长命令
@@ -10,7 +10,7 @@ Git 指令：
 	系统级配置在git安装文件里		本地的全局配置在自己的用户里面
 	可以在用户目录下面创建.bashrc文件 在里面为指令写上别名
 
-创建本地仓库两种方式: 1. git clone (GitHub上的地址) 会同时init和创建网址别名	2. git init
+创建本地仓库两种方式: 1. git clone (GitHub上的地址) 会同时init和创建网址别名 只能拿到master分支	2. git init
 	git status 查看当前目录状态	--ignored 查看被忽略的文件
 	git add abc.txt 放入暂存区 git add .	将全部文件放入暂存区
 	git commit -m "备注"		将暂存区中的全部发到本地仓库
@@ -32,7 +32,7 @@ Git 指令：
 	在master分支上使用 git merge develop合并分支 合并后分支不会被删除
 
 远程使用：
-	git remote -v 查看是否有网址别名 如果没有 用 git remote add 别名 地址 别名最好与远程库名字一样
+	git remote -v 查看是否有网址别名 如果没有 用 git remote add 别名 地址 别名最好与远程库名字一样 也可以用rename重命名 rm删除别名
 	git push <远程主机名> <本地分支>:<远程分支> 把本地的上传 只有是库的成员才能上传	若省略远程分支名 则会在远程创建新分支
 	git pull <远程主机名> <远程分支>:<本地分支>把远程的合并进来 或者省略本地分支 则和当前分支合并
 	免密登录：1、在指定用户中打开gitbash 输入 ssh-keygen -t rsa -C 邮箱 三次回车

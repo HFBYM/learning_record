@@ -39,3 +39,5 @@ Git 指令：
 			 2、进入.ssh 复制公钥(pub)
 			 3、进入github账号的设置 进入sshkey并加入设置
 			 4、利用ssh拉去代码并确定保存
+	Error: ssl certificate problem unable to get local issuer certificate  可用git config --global http.sslVerify false禁用证书查看 改成true启用 
+		详情看https://komodor.com/learn/how-to-fix-ssl-certificate-problem-unable-to-get-local-issuer-certificate-git-error/

@@ -1,0 +1,1 @@
+cmake需要CMkaeList.txt来操控流程	config是从源码生成对应软件的工程文件 build是从工程文件生成可执行文件

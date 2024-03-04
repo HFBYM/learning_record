@@ -8,7 +8,7 @@
 //#include<numeric>             //包含小型库算法 累加 集合等
 
 #include<Windows.h>
-//#include<locale>
+
 std::wstring G2U(const std::string& str)
 {
 	int len = MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, NULL, 0);  //CP_ACP是默认的ANSI编码 即GB2312
@@ -19,7 +19,6 @@ std::wstring G2U(const std::string& str)
 	if (wstr) delete[] wstr;
 	return ret;
 }
-
 int main()
 {
 	std::wifstream ifs;  //用宽文件流
@@ -33,13 +32,21 @@ int main()
 	ofs.open("output.txt", std::ios::out);
 
 	std::wstring line;
-	std::wstring to_found_1 = G2U("在浏览器");
-	std::wstring to_found_2 = G2U("WＡNWEＮS.ＣOM");
+	std::wstring to_found_1 = G2U("===");
+	std::wstring to_found_2 = G2U("章");
+	std::wstring to_found_3 = G2U("yewang");
+	std::wstring to_found_4 = G2U("Y");
+	std::wstring to_found_5 = G2U("网址");
+	
 
+	bool find = false;
 	while (std::getline(ifs, line))
 	{
-		if (line.find(to_found_1) != std::wstring::npos || line.find(to_found_2) != std::wstring::npos)
+		find = line.find(to_found_1) != std::wstring::npos;
+		if (find)
+		{
 			continue;
+		}
 		ofs << line << std::endl;
 	}
 	return 0;
@@ -128,6 +135,7 @@ int main()
 //stf.find 查找第一次出现位置 rfind查找最后一次出现位置 replace 从pos开始后面n个字符换为str2
 //insert表示插入字符 erase表示删除 substr表示返回从pos位置开始的子串
 //npos是size_t的最大值 用于表示不存在的位置 比如find函数找不到就会返回这个值 在string中表长度的话 是直到字符串末尾
+//const char* str=R"(aabb\n\t)"		原生字符串 内不做转义且可以换行
 
 //template<typename T> 先声明T是一个通用的数据类型 然后直接用T去写某些函数 将类型参数化 一个声明下接一个函数模板
 //两种使用方式： 1.自动类型转换 即直接用这个函数 2.显示转换 swap<int>(a,b)
@@ -191,6 +199,7 @@ int main()
 //使用： 父类的指针或引用指向子类的对象 然后调用那个虚函数
 //当一个成员函数被声明为虚函数时，其派生类所有同名函数默认为虚函数
 //virtual void speak() 此时在类里已经有了一个虚函数指针，指向一个虚函数表(vbtable) 
+//可以在子类的同名函数中写上override提示该函数已被重写
 //表内部记录一个虚函数地址(即为&Animal::speak)若子类没有重写 则这个虚函数指针也会一并继承 指向同个虚函数表
 //当子类重写了父类的虚函数 则子类中的虚函数表内部会加上子类的虚函数地址 
 //这个添加在类被创建时发生，在父类的指针或引用指向子类的对象 然后调用那个虚函数时使用
@@ -238,15 +247,18 @@ int main()
 //但如果一个成员变量前有mutable关键字修饰 那么它就可以在常函数中被更改，也能在常对象中被更改
 
 //构造函数没有返回值也不写void 函数名称与类名相同 可以有参数 因此可以重载 只在程序创建对象时自动调用一次
-// 列表初始化构造函数 Person(int a,int b,int c):m_A(a),m_B(b),m_Phone(string){ } 可以利用类的构造函数
-// 拷贝构造函数 Person(const Person &p){ age=p.age  } 把传入的参数数据拷贝到自己身上
-// 调用 ： Person p1;  Person p2(10); Person p3(p2);  编译器有默认拷贝函数 里面只有属性值拷贝
-// Person p2=Person (10); Person p3=Person (p2);  显示调用 右侧是匿名对象 当前行结束后就会被销毁
-// 在类进行值传递和值返回时 会默认使用拷贝函数来创建临时对象或赋值 要注意此时是否要用到深拷贝操作
-// 浅拷贝：简单的赋值拷贝操作  深拷贝：在堆区申请空间进行赋值操作
+//用Log()=delete;来删除构造函数使其不能实例化
+//列表初始化构造函数 Person(int a,int b,int c):m_A(a),m_B(b),m_Phone(string){ } 可以利用类的构造函数
+//拷贝构造函数 Person(const Person &p){ age=p.age  } 把传入的参数数据拷贝到自己身上
+//调用 ： Person p1;  Person p2(10); Person p3(p2);  编译器有默认拷贝函数 里面只有属性值拷贝
+//Person p2=Person (10); Person p3=Person (p2);  显示调用 右侧是匿名对象 当前行结束后就会被销毁
+//在类进行值传递和值返回时 会默认使用拷贝函数来创建临时对象或赋值 要注意此时是否要用到深拷贝操作
+//浅拷贝：简单的赋值拷贝操作  深拷贝：在堆区申请空间进行赋值操作
 //析构函数与构造函数相似 只是名称是~类名 且不能有参数 在其销毁前程序自动调用 两个函数都要在public下
 //当其他类对象作为本类成员时，先构造类对象，再构造自身  析构相反 但如果成员属性是类的指针 就按正常顺序进行
 //析构函数主要把对象开辟的堆区空间给释放 在浅拷贝时可能导致堆区内存重复释放
+//C++只支持一次隐式转换 不能从const char* 到string再用构造函数
+//在构造函数前加上explicit使得该函数的使用必须为显式转换
 
 //头文件里只除去函数实现就行   记得分号放在函数后面 使用时要包含头文件
 //函数实现单独放在另外的文件 但是成员函数要在前面添上类的作用域

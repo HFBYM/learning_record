@@ -1,4 +1,4 @@
-﻿#include<iostream>            //有.h的是C语言的库
+#include<iostream>            //有.h的是C语言的库
 #include<string>              //字符串类型
 #include<vector>              //vetcor表示同一类型对象的集合 是一种模板 不是类或函数 在标准命名空间里
 #include<map>                 //基于二叉树的有序容器

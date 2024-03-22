@@ -1,4 +1,4 @@
-% 基本操作
+## 基本操作
  % clc 清除命令行窗口  clear all 清除工作区所有变量
 s ='a'
 abs(s)
@@ -15,7 +15,7 @@ tic toc %计时开始和结束
 'a'=='aabbc' %得到的是一个序列 每个字符都比较
 str(11001)='Z' %是把第一位 第二位 第五位变成Z
 
-% 矩阵
+## 矩阵
 A=[1 2 3; 4 5 6; 7 8 9]
 B=A' %转置
 C=A(:) %竖着拉直
@@ -38,7 +38,7 @@ sum(A) %每一列的和 mean 每一列的均值
     %sort(A) 每一列从小到大 sortrows(A) 每一行根据第一个排序
     %size 得到行数和列数
 
-% 元胞数组 类似结构体
+## 元胞数组 类似结构体
 A=cell(1,6) %A是一个一行六列的数组 未填充 也可以是两行的
 A{2}=eye(3) %索引从1开始 eye指n阶单位阵
 A{5}=magic(5) %magic指n阶幻方
@@ -48,7 +48,7 @@ A{5}=magic(5) %magic指n阶幻方
     %cat(1,A,B) 竖着接 2 横着接 3升一维接
     %reshape(A,1,4) 按列来将数组重排
 
-% 结构体 不同于C
+## 结构体 不同于C
 books=struct('name',{{'Mechine','Data'}},'price',[40,50])
     %name和price是key值用来索引
 books.name='name';
@@ -60,7 +60,7 @@ books.name{1} %取出来的是字符串
 %cell2struct 两者可以互相转换
 %rmfield 删除某类变量
 
-%矩阵运算
+## 矩阵运算
 B=1:2:9 %二为步长 从起点开始
 C=repmat(B,3,2) %把B视为分块矩阵 将块重复三行两列
 D=ones(2,4) %全为一的矩阵
@@ -76,30 +76,22 @@ B=A(3,2) %第三行第二列
 C=A(3,:) %第三行
 [m,n]=find(A>20) %找到A中大于20的项
 
-% 流程控制
+## 流程控制
 sum=0 %不等于是~=
 for n=1:5 %n=1:1:5 步长1可省略 从1开始<=5
     sum=sum+n^2
 end
-
 while n<=10
-
 end
-
-if n==5
-
-elseif n==3    
-
-else n==4
-
+if n == 5
+elseif n == 3    
+else n == 4
 end 
-
 switch n
     case 1
-
 end
 
-%函数
+## 函数
 function output=function_name(imput) 
     %这一行放在文件头 函数名与文件名要相同 可以只有方程名
     %注意式子中要点乘 防止输入的是序列
@@ -111,14 +103,14 @@ label=['The C temperature is:',num2str(val+20)]; %用矩阵将两个字符串放
     %varargin 输入参数的长度
 f=@(x)exp(-2*x) %lambda表达式 可以直接使用f(x)
 
-%文件操作 有更贴近C的文件操作
+## 文件操作 (有更贴近C的文件操作)
 save myData_1.mat %保存所有变量和名字 加上后缀-ascii可以用文本读取 但没有名字
 load('myData_2.mat', '-ascii') %打开文本内容
 Score=xlsread('04Score.xlsx') %读取excel表格的数字 加上B2:D4就可以读取特定矩形
 xlswrite('045Score.xlsx',M,1,'E1:E4') %文件名 写入的变量 sheet 位置
 [Score Header]=xlsread() %可以分开读取字符和数字
 
-%二维平面绘图
+## 二维平面绘图
 x=0:0.01:2*pi;
 y=sin(x);
 figure; %建立一个幕布
@@ -145,7 +137,7 @@ subplot(m,n,1) %将一个幕布分成多个区域绘制图像 1~m*n的索引
     % grid on 在幕布中加网格线 axis off 只剩曲线 box off 去掉上面和右边的线
 saveas(gcf,'<filename>','<filetype>') %图像保存
 
-%进阶绘图
+## 进阶绘图
 x=logspace(-1,1,100); %从10的-1次方到10的1次方间取100个点
 y=x^2;
 semilogx(x,y); %x轴为对数显示 semilogy 是y轴 loglog两者都是对数显示
@@ -157,7 +149,7 @@ y2=sin(x)-cos(x);
 set(get(AX(1),'Ylabel'),'String','Function_1') %设置左右标签
 set(get(AX(2),'Ylabel'),'String','Function_2')
 set(H1,'LineStyle','--')  %改变线型
-set(H2,'LineStyle',':')  %改变线型
+set(H2,'LineStyle','\:')  %改变线型
 
 y=randn(1,1000);
 hist(y,10); %绘制直方图 后者是区间个数
@@ -169,14 +161,14 @@ polarplot(theta,r); %绘制极坐标图
 stairs(y); %阶梯链接 stem(y) 离散信号形 
 %errorbar 绘制置信区间的
 
-%三维绘图
+## 三维绘图
 t=0:pi/50:10*pi;
 plot3(sin(t),cos(t),t)
 xlabel('sin(t)')
 ylabel('cos(t)')
 zlabel('t')
 
-%统计
+## 统计
 fit=polyfit(x,y,1) %x和y是两个向量 1代表一次拟合 但图还没画出来 只得到两个参数
 xfit=x(1):0.1:x(end);
 yfit=fit(1)*xfit+fit(2);

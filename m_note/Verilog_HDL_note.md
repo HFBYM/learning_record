@@ -26,7 +26,7 @@ module \<modulename>(
 功能定义：有assign 其他模块 always语句三种方式 三种方式之间是并行的
 
 与模块对外接口相连的需要是wire型
-多模块之间要做模块例化 最好把名字列出来一个个连 上层实例化下层模块时可以传参#(3,0)来改变下层的参数 
+多模块之间要做模块例化 最好把名字列出来一个个连 上层实例化下层模块时可以传参#(3,0)来改变下层的参数 Module  #(.W(6), .D(128)) name (<接口>)
 在一个模块中改变另一个模块的参数时，需要使用defparam命令
 ## 程序块
 assign是连续赋值并且可以并行 作用相当于连线
@@ -52,6 +52,9 @@ genvar i 然后用generate和for循环来生成块 其本质像复制粘贴 对�
 在生成块中想前后联系 最好创造一个向量来储存
 
 一般都用异步复位 即敏感列表里面有or negetive rst_n 看波形时一般往时钟之前看
+敏感列表里clk无法实现既检测上升又检测下降
+注意时序逻辑中的临时变量会导致延时
+可用宏函数
 ## 其他
 函数只能与主模块共用同一个仿真时间单位，而任务可以定义自己的仿真时间单位。
 函数不能启动任务，而任务能启动其它任务和函数。
@@ -63,9 +66,17 @@ genvar i 然后用generate和for循环来生成块 其本质像复制粘贴 对�
 
 预处理指令用\` 宏的调用也要用\` 也可以\`include包含其他文件 注意没有pragma once 要自己写ifndef防止重复包含 \`timesclae 定义时间单位和精度
 
+event可以定义一个事件名 在后面用#\<time> -> <event_name>来触发这个事件给always用
+## testbench
+主要内容有信号说明、时钟、复位、激励、模块例化、自校验
+包含的其他模块在控制台一起编译 ~~可不用include 在iverilog扩展参数里面加上-i来忽视报错 或者在include path里面加上${workspaceFolder}/**/~~ 在设置里找到 run at file location __一般情况下可以看设置__
+时钟用initial和forever语句编写
 \$display系统函数 类似与printf 其中%m可以显示调用堆栈 \$time和\$realtime可以得到仿真时间 \$finish结束仿真 \$stop暂停 \$random生成随机数
 \$dumpfile生成vcd文件 \$dumpvars(1.top) 即只储存top下第一层的变量 0表示其下所有层的变量 \$dumpon \$dumpoff启动和开始存储功能
 \$monitor 配合on与off可以格式化监控各个变量的变化值并输出
 \$bit(in)得到in的位数
-
-event可以定义一个事件名 在后面用#\<time> -> <event_name>来触发这个事件给always用
+仿真流程
+* md build  创建用于存放文件的文件夹(不一定需要放在特定文件夹里面)
+* iverilog -o ./build/a.out ./src/tb_code.v ./src/code.v  编译源文件 若有include则只要一个 前者指定生成的文件位置
+* vvp -n ./build/a.out      生成波形文件
+* gtkwave ./build/wave.vcd  查看波形

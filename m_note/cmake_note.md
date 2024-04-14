@@ -1,6 +1,6 @@
 ## 一般流程
 cmake需要CMkaeList.txt来操控流程	config然后build是从源码生成对应软件的工程文件 接着在工程文件里面可以编译生成可执行文件
-若使用gcc 则用cmake -G "MinGW Makefiles"
+进入空白的build文件夹 使用cmake ..找到上级list文件 然后得到sln文件 若使用gcc 则用cmake -G "MinGW Makefiles"
 如果有多个项目 设置出单个启动项
 常用宏: 
 * PROJECT_SOURCE_DIR/CMAKE_SOURCE_DIR/_SOURCE_DIR: 为包含project()命令的最近一个CMakeLists.txt文件所在的文件夹路径
@@ -27,7 +27,8 @@ add_executable(<可执行程序名> <用到的源文件名>) 源文件名用分�
 
 link_directories(<静态库路径>)  link_libraries(<静态库全名或去掉lib .a的名字>) 类似设置配置
 target_link_libraries(<目标文件> <库名>) 动态库的链接具有传递性 可设置权限 该命令须在生成可执行程序之后 动态库也需要路径 命令同静态库
-动态库的链接需要一个静态库来导入??
+在windows下 动态库的链接需要一个库来导入 该库包含动态库的符号表 是一个导入库 也是.lib文件
+如果链接不了 干脆直接把exe和动态库放在一起
 ## 其他
 message(STATUS "source path: \${PROJECT_SOURCE_DIR}") 日志 WARNING警告 FATAL_ERROR错误
 

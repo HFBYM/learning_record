@@ -1,7 +1,26 @@
+# Athena
+一般流程：建立网格，进行工艺，结构提取，在结构处可用save outfile= ??.str保存Tonyplot显示
+extract是提取指令 可以提取各种信息
+## 定义网格
+网格原点在左上角，用line定义 x、y决定方向，spacing决定附近间隔，两者单位为um，tag设置标签
+  line y loc = 0 spac = 0.02
+淀积命令中，div决定纵向总线数，ydy、dy和loc、spac很像，但前者是从淀积层顶端往下的深度
+在衬底初始化后可用relax 来释放网格
+  relax x.min x.max y.min y.max dir.x dir.y surface 
+若定义了dir.x 则只释放x方向 surface表示释放表面的网格
+## 衬底初始化
+  init silicon c.boron=3.0e15
+可以设置晶向、浓度、材料等 可用profile导入包含一维掺杂分布的文件
+## 结构操作
+也可用structure导入结构
+  structure mirror left # 以左边界作镜像
+  structure flip.y # 以y=0作翻转
+---
+# Atlas
 ## 一般格式：
-atlas语法：<STATEMENT> <PARAMETER>=<VALUE>
+atlas语法：\<STATEMENT> \<PARAMETER>=\<VALUE>
 #statement 关键字必须在前，但语句中参数的顺序并不重要 
-#<VALUE>的四种类型：
+#\<VALUE>的四种类型：
 #实数、整数、字符和逻辑（ Real, Integer, Character, and Logical
 
 一些符号的作用：
@@ -19,12 +38,12 @@ atlas语法：<STATEMENT> <PARAMETER>=<VALUE>
 ---
 ## 结构定义(atlas)
 ### 网格
-#第一个statement必须是MESH SPACE.MULT=<VALUE>
+#第一个statement必须是MESH SPACE.MULT=\<VALUE>
 #SPACE.MULT 参数值用作 X.MESH 和 Y.MESH 语句创建的网格的比例因子（scaling factor）。 默认值为 1。
 #大于 1 的值将创建全局较粗的网格以进行快速模拟。 小于 1 的值将创建全局更精细的网格以提高精度。
 #X.MESH 和 Y.MESH 语句分别用于指定垂直线和水平线的微米位置，以及与该线关联的垂直或水平间距。
-X.MESH LOCATION=<VALUE> SPACING=<VALUE>
-Y.MESH LOCATION=<VALUE> SPACING=<VALUE>
+X.MESH LOCATION=\<VALUE> SPACING=\<VALUE>
+Y.MESH LOCATION=\<VALUE> SPACING=\<VALUE>
 #必须为每个方向指定至少两条网格线。 Atlas 会自动插入允许任何相邻行之间的间距值逐渐过渡所需的任何新行。
 #X.MESH 和 Y.MESH 语句必须按 x 和 y 递增的顺序列出。 x 和 y 的负值和正值都是允许的。 
  
@@ -32,7 +51,7 @@ ELIMINATE COLUMNS X.MIN=0 X.MAX=4 Y.MIN=0.0 Y.MAX=3
 #从指定矩形内沿指定方向每隔一条网格线删除一次。
 #删除以 x=0、x=4、y=0 和 y=3 微米为边界的矩形内的每隔一条垂直网格线 用row就删水平
 ### 区域
-REGION number=<integer> <material_type> <position parameters>
+REGION number=\<integer> \<material_type> \<position parameters>
 #Region number必须从 1 开始，并为每个后续 region 语句增加。Atlas 中最多可以有 15000 个不同的区域。区域边缘最好与网格重叠 不然会自动补齐三角形
 #Atlas中有大量的材料可用。 如果定义了依赖于成分的材料类型，则还可以在 REGION 语句中指定 x 和 y 成分的分数。
 #使用 X.MIN、X.MAX、Y.MIN 和 Y.MAX 参数以微米为单位指定position parameters。
@@ -40,7 +59,7 @@ REGION number=<integer> <material_type> <position parameters>
 #确保将材料分配给结构中的所有网格点。 如果不这样做，将出现错误消息并且 Atlas 将无法成功运行 
 用compx.top=0.1 compx.bottom=0.53来划分区域上下的线性组分渐变 也可用grad让区域内某一处下降到0
 ### 电极
-ELECTRODE NAME=<electrode name> <position_parameters> #默认接触为欧姆接触
+ELECTRODE NAME=\<electrode name> \<position_parameters> #默认接触为欧姆接触
 #最多可以指定 50 个electrode。使用 X.MIN、X.MAX、Y.MIN 和 Y.MAX 参数以微米为单位指定position_parameters。
 #多个electrode语句可能具有相同的电极名称。与相同electrode名称相关联的 node 被视为已经电气连接。
 定义电极位置时可以使用一些快捷方式：
@@ -49,7 +68,7 @@ ELECTRODE NAME=<electrode name> <position_parameters> #默认接触为欧姆接�
 ELECTRODE NAME=SOURCE LEFT LENGTH=0.5
 #指定源电极从结构的左上角开始并向右延伸距离 LENGTH
 ### 参杂
-DOPING <distribution_type> <dopant_type> <position_parameters>
+DOPING \<distribution_type> \<dopant_type> \<position_parameters>
 分布方式可以为uniform(均匀) gaussion(高斯) n.type concentration= 1e16 浓度 位置可以是坐标也可以是区域编号
 DOPING GAUSSIAN CONCENTRATION=1E18 CHARACTERISTIC=0.05 P.TYPE X.LEFT=0.0 X.RIGHT=1.0 PEAK=0.1
 #DOPING 语句指定峰值浓度为 10^18 cm-3 的 p 型高斯分布。该声明指定峰值掺杂位于从 x = 0 到 x = 1 微米的一条线上。
@@ -81,7 +100,7 @@ NY 参数：描述region中包含多少 Y 网格线，以便 Y 网格线在该�
 可以使用 SY 参数而不是 NY 来指定区域中 Y 网格线之间的间距（以微米为单位）。确保 SY 的值不超过 THICKNESS 的值。
 SY、NY和THICKNESS之间的关系：SY = THICKNESS/NY
 y方向的线不一定总是符合数目，因为其间距会自动插值
-构造完了可以加上 save outfile = <filename>.str   tonyplot <filename>.str 来保存和显示结构
+构造完了可以加上 save outfile = \<filename>.str   tonyplot \<filename>.str 来保存和显示结构
 
 ---
 ## 材料参数和模型
@@ -97,3 +116,13 @@ y方向的线不一定总是符合数目，因为其间距会自动插值
 
 ---
 ## 数值计算方法
+* 基本方法
+  1. Newton：比较依赖于初始猜测值
+  2. Gummel：收敛较慢，但容忍粗糙的初始猜测值。不能用于含有集总元件或电流边界的情况
+  3. Block：适用于晶格加热或能量平衡方程
+  4. 上述方法可以组合
+* 在使用方法时可用maxtrap增加次数
+
+---
+## 器件特性
+---

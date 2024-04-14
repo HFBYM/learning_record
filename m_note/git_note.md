@@ -9,7 +9,8 @@ Linux指令:
  git config --global user.name "Clare"
  git config --global user.email "10090535708@qq.com"
 * 系统级配置在git安装文件里		本地的全局配置在自己的用户里面
- 可以在用户目录下面创建.bashrc文件 在里面为指令写上别名
+ 可以在用户目录下面创建.bashrc文件 在里面为指令写上别名 alias git-log='git log --pretty=oneline --all --graph --abbrev-commit'
+ 也可以用git config --global alias.mlog 'git log --pretty=oneline --all --graph --abbrev-commit' 来设定
 ## 常用指令
 * 创建本地仓库两种方式: 
    1. git clone (GitHub上的地址) 会同时init和创建网址别名 只能拿到master分支	
@@ -29,7 +30,7 @@ filename/ 表示文件夹本身与里面内容(文件夹最好用/结尾) filena
 一般模板：/*忽略所有文件 !*/只保留文件夹的壳子 !*.txt需要留下的文件类型 
 ## 提交
 git log 得到提交日志  加上--stat 查看具体修改的哪些文件	 -all 显示所有分支 -graph 以图的方式 -pretty=oneline一行 -abbrev-commit令id简短
-git relog可以查看所用提交
+git relog可以查看所有提交
 git diff 加上commit id 可以查看这次提交更改了什么内容	//esc :wq退出
 git reset --hard 加上commit id	跳转到某个节点  选中即复制 滚轮点击即粘贴
 ## 分支使用

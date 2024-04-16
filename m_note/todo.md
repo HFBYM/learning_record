@@ -12,29 +12,29 @@
 3. 六级
 ---
 ## 课外
-1. 大创(科研?) __截止时间:明年4月30日__ 最好在今年做出设计图
-2. [全国大学生电子设计竞赛](https://www.nuedc-training.com.cn/index/news) 8月
-3. [蓝桥杯](https://dasai.lanqiao.cn/??/)(单片机) 10月开始报名
-4. [数学建模大赛](http://www.mcm.edu.cn/) 9月份开赛
-5. [集成电路创新大赛](http://univ.ciciec.com/)(学院要求??) __5月份初赛__
-6. [大挑](http://www.tiaozhanbei.net/) 明年
-7. [嵌入式设计比赛] 明年3月份报名
+1. [集成电路创新大赛](http://univ.ciciec.com/)                             __5月20号提交作品__
+2. 大创(科研?)                                                            __截止时间:明年4月30日__ 最好在今年做出设计图
+3. [数学建模大赛](http://www.mcm.edu.cn/index_cn.html)                     7月份开始准备 8月底截止报名 9月初开赛
+4. [全国大学生嵌入式芯片与系统设计竞赛](http://fpgachina.cn/)                (FPGA设计) 8月份开始报名
+5. [蓝桥杯](https://dasai.lanqiao.cn/)                                    (单片机、C++开发、嵌入式) 10月开始报名
+6. [全国大学生数学竞赛](http://www.cmathc.cn/)                             11月份
+7. [大挑](http://www.tiaozhanbei.net/)                                    明年2月开始报名
+8. [全国大学生电子设计竞赛](https://www.nuedc-training.com.cn/index/news)  (嵌入式) 明年3月份开始报名
 ---
 ## 兴趣
 1. C++那些事(基于vscode的C++开发)
 2. OpenGL引擎
 3. unity mod开发
-4. 简易Python绘图 
 ---
 # 每日任务
-1. 作业与课本 (不能听音乐)
-2. 英语 一个小时(6月15)
-   1. stop translating in the head so set away 5 minutes to practice
-3. silvaco和NMOS设计 至少一小时 (不能听音乐)
-4. Verilog 不超过半小时 (设计CPU??)
-5. 枯燥时自我奖励：cmake 
-6. 大创画饼
-7. 提升身体素质
+1. 作业与课本
+2. silvaco和NMOS设计
+3. 英语六级(6月15)
+4. 数学建模、Python
+5. Verilog(FPGA)
+6. 缺P8，缺231026，240126，240426思想汇报
+7. 大创画饼
+8. 提升身体素质
    * 跑步
      1. 头部保持稳定
      2. 重心踩在脚下
@@ -50,8 +50,9 @@
      3. 半拉能一次20个
      4. 吊住慢慢放下 最低端有个快速拉起的动作 能达到20秒
      5. 进行长时间高质量的动作
-8. 慕课
-9. 单片机和Proteus仿真 (不超过一小时)
+9. 慕课
+10. 单片机和Proteus仿真 ?
+11. 嵌入式设计 ?
 ---
 # 技术栈
 * Verilog HDL
@@ -75,4 +76,5 @@
      2. 基础语法
         1. atlas
         2. atheta
-  
+* 数学建模大赛
+  1. Python

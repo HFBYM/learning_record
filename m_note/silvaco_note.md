@@ -1,20 +1,51 @@
 # Athena
 一般流程：建立网格，进行工艺，结构提取，在结构处可用save outfile= ??.str保存Tonyplot显示
 extract是提取指令 可以提取各种信息
+set lay_left=-0.5 设置全局变量 用$lay_left访问
+仿真结束后可用optimizer进行参数优化
 ## 定义网格
-网格原点在左上角，用line定义 x、y决定方向，spacing决定附近间隔，两者单位为um，tag设置标签
-  line y loc = 0 spac = 0.02
-淀积命令中，div决定纵向总线数，ydy、dy和loc、spac很像，但前者是从淀积层顶端往下的深度
-在衬底初始化后可用relax 来释放网格
-  relax x.min x.max y.min y.max dir.x dir.y surface 
+    line y loc = 0 spac = 0.02 //网格原点在左上角，用line定义 x、y决定方向，spacing决定附近间隔，两者单位为um，tag设置标签
+    relax x.min x.max y.min y.max dir.x dir.y surface //在衬底初始化后可用relax 来释放网格
 若定义了dir.x 则只释放x方向 surface表示释放表面的网格
 ## 衬底初始化
-  init silicon c.boron=3.0e15
+    init silicon c.boron=3.0e15
 可以设置晶向、浓度、材料等 可用profile导入包含一维掺杂分布的文件
 ## 结构操作
+    structure mirror left # 以左边界作镜像
+    structure flip.y # 以y=0作翻转
 也可用structure导入结构
-  structure mirror left # 以左边界作镜像
-  structure flip.y # 以y=0作翻转
+## 离子注入
+    implant dose=1e14 energe=100 tilt=7 //tilt为注入离子束的倾角 print.mom可以打印和查看电磁场模拟的结果
+## 扩散
+    diffuse time=30 temp=1000 //干氧氧化
+## 淀积
+    deposit material=BPSG thickness=0.1 c.boron=5e19 //可用rate.depo 进行复杂淀积如CVD
+淀积命令中，div决定纵向总线数，ydy、dy和loc、spac很像，但前者是从淀积层顶端往下的深度
+## 刻蚀
+    etch oxide start x=1 y=0.0
+    etch continue x=1 y=-0.6 
+    etch continue x=2 y=-0.6
+任意形状几何刻蚀 若采用物理刻蚀则需用rate.etch
+## 外延
+    epitaxy thick=6 time=10 temp=1050
+其网格控制方式和淀积一致
+## 抛光
+polish是化学机械抛光 rate.polish可以仿真高级抛光
+## 光刻
+1. 通过mask导入maskviews中的掩膜图案 或用layout直接定义掩膜
+2. illumination设置光照波长和角度
+3. projection设置光学投影的参数
+4. filter设置光源滤波和发射控形状
+5. image指令用于输出图像和观察掩膜样式
+6. expose可定义曝光剂量和曝光平面
+7. bake对光刻胶后曝光和后坚膜时的烘烤
+8. develop设定显影的模型和保存单步结构 rate.develop设定精细物理曝光
+## 电极
+    electrode x=0.05 name=gate
+    electrode backside name=cathode
+只要点落在金属或多晶硅内，其整个区域都会作为电极。Y不指定时默认为器件的表面
+backside定义结构底部为平面电极 若底部存在金属则只能用x和y
+
 ---
 # Atlas
 ## 一般格式：

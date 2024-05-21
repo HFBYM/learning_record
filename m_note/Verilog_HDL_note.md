@@ -55,13 +55,33 @@ genvar i 然后用generate和for循环来生成块 其本质像复制粘贴 对�
 敏感列表里clk无法实现既检测上升又检测下降
 注意时序逻辑中的临时变量会导致延时
 可用宏函数
-## 其他
+一个变量最好不要出现在多个块中 很容易被多重赋值
+## 函数和任务
+        function [N-1:0]     data_rvs ;     //可以定义返回和输入的类型 若在function后面加上automatic则该函数可并行使用和递归
+            input     [N-1:0] data_in ;
+            parameter         MASK = 32'h3 ;
+            integer           k ;
+            begin
+                for(k=0; k<N; k=k+1) begin
+                    data_rvs[N-k-1]  = data_in[k] ;  
+                end
+            end
+        endfunction
 函数只能与主模块共用同一个仿真时间单位，而任务可以定义自己的仿真时间单位。
 函数不能启动任务，而任务能启动其它任务和函数。
 函数至少要有一个输入变量，而任务可以没有或有多个任何类型的变量。
 函数返回一个值，而任务则不返回值。
+函数不能非阻塞赋值且是组合的
+函数不能单独作为一条语句出现，只能放在赋值语言的右端	
 
-任务定义结构内不允许出现过程块（initial或always过程块）。
+        task xor_oper_iner;
+            input [N-1:0]   numa;
+            input [N-1:0]   numb;
+            output [N-1:0]  numco ;     //无需再注明 reg 类型，虽然注明也可能没错
+            #3  numco = numa ^ numb ;   //不用assign，因为输出默认是reg
+        endtask
+任务定义结构内不允许出现过程块(initial或always过程块)
+任务可以作为一条单独的语句出现语句块中
 任务定义结构内可以出现disable终止语句，这条语句的执行将中断正在执行的任务。在任务被中断后，程序流程将返回到调用任务的地方继续向下执行。
 
 预处理指令用\` 宏的调用也要用\` 也可以\`include包含其他文件 注意没有pragma once 要自己写ifndef防止重复包含 \`timesclae 定义时间单位和精度
@@ -72,9 +92,10 @@ event可以定义一个事件名 在后面用#\<time> -> <event_name>来触发�
 包含的其他模块在控制台一起编译 ~~可不用include 在iverilog扩展参数里面加上-i来忽视报错 或者在include path里面加上${workspaceFolder}/**/~~ 在设置里找到 run at file location __一般情况下可以看设置__
 时钟用initial和forever语句编写
 \$display系统函数 类似与printf 其中%m可以显示调用堆栈 \$time和\$realtime可以得到仿真时间 \$finish结束仿真 \$stop暂停 \$random生成随机数
-\$dumpfile生成vcd文件 \$dumpvars(1.top) 即只储存top下第一层的变量 0表示其下所有层的变量 \$dumpon \$dumpoff启动和开始存储功能
+\$dumpfile("mul_wave.vcd")生成vcd文件 \$dumpvars(1, m_mul) 即只储存top下第一层的变量 0表示其下所有层的变量 \$dumpon \$dumpoff启动和开始存储功能 #100 $finish结束仿真
 \$monitor 配合on与off可以格式化监控各个变量的变化值并输出
 \$bit(in)得到in的位数
+force reg1 = 1'b1; release reg1;    可以对任意变量强制驱动
 仿真流程
 * md build  创建用于存放文件的文件夹(不一定需要放在特定文件夹里面)
 * iverilog -o ./build/a.out ./src/tb_code.v ./src/code.v  编译源文件 若有include则只要一个 前者指定生成的文件位置

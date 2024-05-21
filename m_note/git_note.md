@@ -13,12 +13,15 @@ Linux指令:
  也可以用git config --global alias.mlog 'git log --pretty=oneline --all --graph --abbrev-commit' 来设定
 ## 常用指令
 * 创建本地仓库两种方式: 
-   1. git clone (GitHub上的地址) 会同时init和创建网址别名 只能拿到master分支	
-   2. git init
+   1. git init
+   2. git clone (GitHub上的地址) 会同时init和创建网址别名 只能拿到master分支	
+   3. 若clone出现invalid path 用git config core.protectNTFS false 关闭路径检测 ???未解决
 * git status 查看当前目录状态	--ignored 查看被忽略的文件
   git add abc.txt 放入暂存区 git add .	将全部文件放入暂存区
   git commit -m "备注"		将暂存区中的全部发到本地仓库
   git rm --cached <filename>	将暂存区中的一个文件移除暂存区
+* 执行以下命令将要停止追踪的文件或目录从Git版本控制中删除：git rm –cached <文件或目录名>
+  提交删除操作的变更：git commit -m “Stop tracking <文件或目录名>”
 ## .gitignore文件
 有时候不需要把一些版本纳入版本控制中 在主文件目录下创建.gitingnore 让git忽略满足规则的文件 规则如下：
 1. #为注释	

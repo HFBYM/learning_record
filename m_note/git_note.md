@@ -10,7 +10,8 @@ Linux指令:
  git config --global user.email "10090535708@qq.com"
 * 系统级配置在git安装文件里		本地的全局配置在自己的用户里面
  可以在用户目录下面创建.bashrc文件 在里面为指令写上别名 alias git-log='git log --pretty=oneline --all --graph --abbrev-commit'
- 也可以用git config --global alias.mlog 'git log --pretty=oneline --all --graph --abbrev-commit' 来设定
+ 也可以用git config --global alias.mlog 'log --pretty=oneline --all --graph --abbrev-commit' 来设定
+ 即git mlog == git log --pretty=oneline --all --graph --abbrev-commit
 ## 常用指令
 * 创建本地仓库两种方式: 
    1. git init

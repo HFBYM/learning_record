@@ -20,7 +20,7 @@ include_directories(\${PROJECT_SOURCE_DIR}/include)  通过源码根目录来定
 
 aux_source_directory(\${CMAKE_CURRENT_SOURCE_DIR}/src SRC_LIST) 查找某个目录下的全部源文件并保存到一个变量里 宏表示当前CMakeLists.txt路径
 也可用file(GLOB MAIN_SRC \${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)来搜索符合条件的文件	
-add_executable(<可执行程序名> <用到的源文件名>) 源文件名用分号隔开 头文件也放在这里面
+add_executable(<可执行程序名> <用到的源文件名>) 源文件名用分号隔开 头文件不用放在这里面
 ## 库
 若需要生成静态库 则使用add_library(<库名> STATIC <源文件名>) 动态库用SHARED 动态库要和别的exe文件放在一起
 修改库的生成路径则需要更改LIBRARY_OUTPUT_PATH 注意两种库、可执行程序这三个选项中只能出现一种
@@ -31,6 +31,7 @@ target_link_libraries(<目标文件> <库名>) 动态库的链接具有传递性
 如果链接不了 干脆直接把exe和动态库放在一起
 ## 其他
 message(STATUS "source path: \${PROJECT_SOURCE_DIR}") 日志 WARNING警告 FATAL_ERROR错误
+#set(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g -ggdb")     改变调试报错信息格式
 
 拼接:list(APPEND SRC_1 \${SRC_1} \${SRC_2} \${TEMP})把后三者的值拼接放到第一个
 移除:list(REMOVE_ITEM SRC_1 \${PROJECT_SOURCE_DIR}/main.cpp) 注意file搜索到的是绝对路径 所以移除也要绝对路径

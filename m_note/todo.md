@@ -16,10 +16,11 @@
 9. [全国大学生嵌入式芯片与系统设计竞赛](http://www.socchina.net/home?trackType=2) 4月截止报名 8月决赛
 ---
 ## 兴趣
-1. FPGA
-2. C++那些事(基于vscode的C++开发)
-3. OpenGL引擎
-4. unity mod开发
+1. 重构Breakout(基于vscode的C++开发)
+2. FPGA
+3. Linux
+4. OpenGL引擎
+5. unity mod开发
 ---
 # 任务
 1. 作业与课本

@@ -1,17 +1,133 @@
+# OpenGL
+
+# vscode
+1. 多文件编译 在tasks里面改为${workspaceFolder}\\*c 输出的名字也要改
+2. 宏:
+        ${userHome} - the path of the user's home folder
+        ${workspaceFolder} - the path of the folder opened in VS Code
+        ${workspaceFolderBasename} - the name of the folder opened in VS Code without any slashes (/)
+        ${file} - the current opened file
+        ${fileWorkspaceFolder} - the current opened file's workspace folder
+        ${relativeFile} - the current opened file relative to workspaceFolder
+        ${relativeFileDirname} - the current opened file's dirname relative to workspaceFolder
+        ${fileBasename} - the current opened file's basename
+        ${fileBasenameNoExtension} - the current opened file's basename with no file extension
+        ${fileExtname} - the current opened file's extension
+        ${fileDirname} - the current opened file's folder path
+        ${fileDirnameBasename} - the current opened file's folder name
+        ${cwd} - the task runner's current working directory upon the startup of VS Code
+        ${lineNumber} - the current selected line number in the active file
+        ${selectedText} - the current selected text in the active file
+        ${execPath} - the path to the running VS Code executable
+        ${defaultBuildTask} - the name of the default build task
+        ${/} - shorthand for ${pathSeparator}
+3. 自动注释配置
+         {
+          // Doxygen documentation generator set
+          // 文件注释：版权信息模板
+          "doxdocgen.file.copyrightTag": [
+              "@copyright Copyright (c) {year}  XX通信公司"
+          ],
+          // 文件注释：自定义模块，这里我添加一个修改日志
+          "doxdocgen.file.customTag": [
+              "@par 修改日志:",
+              "<table>",
+              "<tr><th>Date       <th>Version <th>Author  <th>Description",
+              "<tr><td>{date} <td>1.0     <td>wangh     <td>内容",
+              "</table>",
+          ],
+          // 文件注释的组成及其排序
+          "doxdocgen.file.fileOrder": [
+              "file",		// @file
+              "brief",	// @brief 简介
+              "author",	// 作者
+              "version",	// 版本
+              "date",		// 日期
+              "empty",	// 空行
+              "copyright",// 版权
+              "empty",
+              "custom"	// 自定义
+          ],
+          // 下面时设置上面标签tag的具体信息
+          "doxdocgen.file.fileTemplate": "@file {name}",
+          "doxdocgen.file.versionTag": "@version 1.0",
+          "doxdocgen.generic.authorEmail": "wanghuan3037@fiberhome.com",
+          "doxdocgen.generic.authorName": "wangh",
+          "doxdocgen.generic.authorTag": "@author {author} ({email})",
+          // 日期格式与模板
+          "doxdocgen.generic.dateFormat": "YYYY-MM-DD",
+          "doxdocgen.generic.dateTemplate": "@date {date}",
+      	
+          // 根据自动生成的注释模板（目前主要体现在函数注释上）
+          "doxdocgen.generic.order": [
+              "brief",
+              "tparam",
+              "param",
+              "return"
+          ],
+          "doxdocgen.generic.paramTemplate": "@param{indent:8}{param}{indent:25}My Param doc",
+          "doxdocgen.generic.returnTemplate": "@return {type} ",
+          "doxdocgen.generic.splitCasingSmartText": true,
+      }
+4. 调试的话要更改调试的exe名 调试器的路径也要更改 注意prelaunch tasks要注意类型为shell 配置文件放在工作区根目录下
 # 大规模设计
-## 第零章
-* 各个类的实现不应循环包含 难以单独模块化的测试
-* 不应该包含一大堆不必要的头文件
-* 最好不要有全局命名空间污染 typedef TargetId int 最好放在某个类内部
-## 第一章
+## 第一部分
+* inline函数由于其特殊性，相当于在调用处展开，默认是内链接属性的符号, 所以不会出现重定义问题。
+* const修饰变量属性也是内链接的，也即在头文件定义不会造成重定义，但可以通过extern 双重修饰，使变量具有外链接属性
+* 静态类成员函数和非内联成员函数是有外部链接的
 * const inline static typedef enum 宏指令都是内部链接
 * 使用驼峰 类型名称首字母大写 成员变量使用m_前缀
 * 一般的类函数按构造析构、操控更改、常量接口来分布
+## 第二部分
+* 规则
+  1. 不要有公有数据
+  2. 避免在文件作用域内包含带有外部链接的数据 
+     1. 需要全局变量时将其封装为Global类并设置接口 
+     2. 避免在.h中使用自由函数(除了运算符函数)、在.c中使用带有外部链接的自由函数(包括运算符函数) 可以用结构体来静态封装
+     3. 避免在.h的文件作用域内使用枚举、typedef、和常量数据 最好封装到类里
+     4. 除非为包含卫哨 否则避免在头文件中使用预处理宏
+  3. 对于大型的项目或复杂组件 需要冗余卫哨 #ifndef ... #include  (#define...) #endif
+  4. 每个组件内部声明的(除了类)都要在组件内实现 确保.h中的接口即是组件的全部接口
+  5. 每个组件的.c要在第一行包含其头文件
+  6. 每个包中的头文件作用域应该加上包前缀
+  7. 每个文件前加上包前缀
+  8. 避免包的循环依赖
+  9. 不要通过值传递自定义类型
+  10. 基类析构函数必须为virtual
+* 指南
+  1. 将接口记录成文档 明确给出未定义行为出现的条件 或用assert语句针对某个假设
+  2. 除了非私有继承，不应该依靠一个头文件去包含另一个头文件
+  3. 组件自带隔离测试文件 可以根据组件的依赖顺序来决定测试顺序
+  4. 避免组件循环依赖
+  5. 最小化包导出的头文件的数量，可以提高可用性
+  6. main中应该分解出独立可测试的和潜在可重用的功能
+  7. 使用参数传值比值返回更有效率
+  8. 可以多使用非常量指针来传递
+## 第三部分
+1. 可以使用CCD来量化一个架构的依赖度
+2. 解开循环依赖
+   1. 把公共部分升级放入一个struct静态函数
+   2. 也可以降级 让客户端不怎么修改代码 枚举常量可以移到单独的struct中
+   3. 或者把一个类分解成接口类和其派生出的实现类
+   4. 名义上的接口使用不会造成依赖
+3. 有时候不必使用大组件来实现小功能(比如string)
+4. 使用函数指针(回调函数)可以减少耦合 可以将其封装在一个虚函数内
+5. 难以拆解的循环中，可以分解出可重用的部分，剩下的放入一个组件内
+6. 使用包装器组件(全内联函数?)可将封装的层次升级到子系统的最高层，便于低层次通信
+## 第四部分
+1. 减少组件的头文件对其他组件的依赖
+   1. 不使用私有继承
+   2. 私有成员函数改成.c中的静态自由函数，若重用性高，直接放入公共静态组件中使用
+   3. 私有变量用不透明指针或放入.c结构体中
+   4. 显式指定编译器自动生成的函数
+   5. 减少#include次数
+   6. 移除默认参数并分成多个函数
+   7. 头文件中的枚举类型可以考虑变为静态const成员
+2. 使用协议类来隔离
+3. 过程接口(一些自由函数) 能够将大系统的组织与客户端程序相隔离
+4. 可以从客户端传入一个已构造的参数来减轻创建开销
 # 基础知识
-* <cctype>                字符处理函数 isalpha isdigital之类的
-* <algorithm>             包含STL算法
-* <numeric>               包含小型库算法 累加 集合等
-
+## 高级用法
 lambda表达式是隐式内联 [capture list(通常为空)](parameter list(可省)) -> return type(可省) {function body}
 捕获列表表明此lambda函数使用的它所载函数中的局部变量 auto f=[]{return 42;};  f()调用lambda函数 不可使用默认参数
 类似于仿函数，lambda函数定义了一种类 该类可以实例化对象  也可以被函数返回 由[=] 或[&]让编译器自动捕获所需变量
@@ -20,7 +136,8 @@ bind是一个函数适配器，可以用来更改一个函数的接口，具体�
 
 constexpr函数如果输入是个常量，那么这个函数的返回也视为一个常量
 可以用assert和NDEBUG宏来辅助调试 __FILE__ __LINE__ __TIME__ __DATE__
-
+typedef char(*PTRFUN)(int); 定义char( *)(int)的函数指针 的别名为PTRFUN
+## 异常
 异常处理机制： throw表达式 try语句块 一套异常类
 出现异常就throw一个error 如runtime_error 抛出异常将终止当前函数，并转移控制权给能处理该异常的代码
 try块后面的是至少一个catch子句 括号内一个(可能为命名的)对象的声明 称为异常声明 执行某个子句后跳转到所有子句之后
@@ -28,6 +145,10 @@ try块后面的是至少一个catch子句 括号内一个(可能为命名的)对
 要是都找不到就会调用terminate标准库函数 会导致程序非正常退出 对于没有try语句定义的异常也是如此
 常见异常：exception runtime_error range_error(超出了有意义的值域) overflow_error(计算上溢) 
 underflow_error logic_error domain_error(参数对应的结果值不存在) invalid_argument length_error out_of_range
+## 算法库
+* <cctype>                字符处理函数 isalpha isdigital之类的
+* <algorithm>             包含STL算法
+* <numeric>               包含小型库算法 累加 集合等
 
 <numeric> accumulate累加 起始位置和起始值 fill将区间内的值变为指定值 set_intersection获取交集 集合处理都要是有序
 set_union 获取并集 a和b的差集意为在a中但不在a和b的并集中 所以没有交换律 set_diffence获取差集
@@ -51,6 +172,7 @@ unique算法将不重复的部分放到前面，并返回不重复部分的尾�
 关系仿函数：greater_equal less equal_to 也都是模板 要填充且实例化才能当仿函数用 
 逻辑仿函数：logic_not logic_or logic_add
 
+## STL
 <map> 每个元素都是一对 第一个为key值 起到索引、下标作用 第二个为实值 元素插入时根据键值自动排序 底层也是二叉树
  用迭代器输出key值和实值 lo=m.lower_bound(1),hi=m.upper_bound(2) 可以输出所有key为1，2的实值(用second)
  或者用begin 来顺序输出容器里的值 此时不需要知道键值 或用find和count结合使用输出实值 一般用at(key) 输出 更安全  
@@ -96,7 +218,7 @@ stf.find 查找第一次出现位置 rfind查找最后一次出现位置 replace
 insert表示插入字符 erase表示删除 substr表示返回从pos位置开始的子串
 npos是size_t的最大值 用于表示不存在的位置 比如find函数找不到就会返回这个值 在string中表长度的话 是直到字符串末尾
 const char* str=R"(aabb\n\t)"		原生字符串 内不做转义且可以换行
-
+## 模板
 template<typename T> 先声明T是一个通用的数据类型 然后直接用T去写某些函数 将类型参数化 一个声明下接一个函数模板
 两种使用方式： 1.自动类型转换 即直接用这个函数 2.显示转换 swap<int>(a,b)
 写在template下的函数必须要用到模板类型T或者显示确定T的类型且T的类型要一致
@@ -112,10 +234,8 @@ Person<string,int>p1("ah",87);来使用类模板 只有类模板可以有默认�
 全局函数作类模板的友元 最好直接在类内实现
 不同数据类型填充的类模板不算一个类 不能访问私有成员  其拷贝初始化最好都是同一数据类型 在类内对传进来的同一类型
 直接用MyArray& a 就可以使用或者设定为返回值 默认两者数据类型是一样的
-
-当在做一个项目时  可以写一个管理全局的类来贯穿整个项目，管理文件 提供接口
-
-文件操作：要包含头文件<fstream>  ofstream写文件 ifstream读文件 fstream读写文件
+## 文件操作
+要包含头文件<fstream>  ofstream写文件 ifstream读文件 fstream读写文件
 ios::in out ate初始位置文件尾 app追加写 trunc若存在先删除再创建 binary以二进制形式 用|使用多种方法
 创建流对象 ofstream ofs 指定打开方式 ofs.open("text.txt",ios::ofstream|ios::binary)
 ofs<<"Tom"<< endl   ofs.close()  用ifs.is_open()判断是否打开成功
@@ -124,7 +244,7 @@ string buffer 第三种 getline(ifs,buffer)通过string的内置函数操作 第
 二进制读写:Person p;ofs.write((const char*)&p,sizeof(Person))  ofs.read((char*)&p,sizeof(Person))
 若文件为空 则里面只有一个字符eof 用一个字符ch读出一个字符后 让文件指针指向文件末尾
 再用ifs.eof()用于判断文件是否为空
-
+## 多态
         class Animal
         {
         public:
@@ -168,8 +288,8 @@ virtual void speak() 此时在类里已经有了一个虚函数指针，指向�
 多态就是一种接口多种形态 父类相当于于一种模板 抽象类虽无法实例化对象，但可以使用其指针和引用
 虚析构和纯虚析构:父类的指针或引用指向子类的对象 只能操控其从父类继承来的成员 导致在销毁时子类析构不会触发
 利用虚析构可以让子类在被释放时可以运行子类的析构 纯虚析构要类内声明 类外实现 一有纯虚就变成抽象类
-
-继承：class 子类: 继承方式 父类 子类也称为派生类 父类也称为基类 两者不算同一个类了
+## 继承
+class 子类: 继承方式 父类 子类也称为派生类 父类也称为基类 两者不算同一个类了
 class Java: public BasePage {}; 即可继承BasePage类public的所有内容
 任何继承方式都不能访问父类private内容 但是会被继承下去 公共继承： 子类的继承项访问权限和父类一样
 保护继承：都变成了保护权限  私有继承：都变成私有继承
@@ -179,13 +299,14 @@ p129 查看对象模型  先构造父类 再构造子类 析构相反
 子类继承下来的静态变量与父类的是同一个 多继承的情况下也是一样
 菱形继承（或钻石继承）要在每一个重复继承项前加作用域 可用虚继承来解决资源浪费问题
 sheep和tuo :virtual public Animal 后者称为虚基类 同时继承sheep和tuo的子类就不会出现二义性
-
+## 函数
 运算符重载 这些函数本身也可以发生函数重载 就是可以写多个同一个运算符的重载
 通过成员函数重载 Person opetator+ (Person &p) Person p3=p1.operator(p2) =>Person p3=p1+p2
 通过全局函数重载：Person operator+ (Person &p1,Person &p2)
 左移运算符重载：一般不用成员函数来实现 因为无法实现cout在左边 
 所以ostream &operator<<  (ostream &cout,Person &p) 	int& a = int(8)对于单纯的一个值无法进行引用
 Person operator++(int){Person temp=*this;this->num++; return temp}   用占位参数来表示后置递增
+operator const char*() 是重载类型转换运算符
 赋值运算符重载函数也是默认的浅拷贝 在有堆区开辟时要重载它为深拷贝
 函数调用运算符重载，也叫仿函数：void operator()(string str){cout} myprint("Hello")用对象来调用这个函数
 用匿名对象调用仿函数：MyAdd()(100,100)
@@ -193,8 +314,8 @@ Person operator++(int){Person temp=*this;this->num++; return temp}   用占位�
 友元：把friend 全局函数的声明 放在一个类内 则这个全局函数就可以访问这个类的私有成员 
 也可以friend class goodgay 放在一个类内 则goodgay 可以访问这个类的私有成员
 若是成员函数 要在函数名前加上类作用域 然后与全局函数操作类似
-
-静态成员变量：所有对象都共享一份数据  类内声明，类外初始化 即在类外int Person::m_A=10  
+## 类
+静态成员变量：所有对象都共享一份数据  类内声明，类外初始化(私有也一样) 即在类外int Person::m_A=10  
 可以通过类名直接访问 cout<< Person::m_A
 静态成员函数：访问方式和静态成员变量一样   其只能访问静态成员变量
 只有非静态成员变量是属于类（或其对象）上的   静态成员变量，静态成员函数及普通成员函数与类大小无关 
@@ -220,9 +341,6 @@ Person p2=Person (10); Person p3=Person (p2);  显示调用 右侧是匿名对�
 C++只支持一次隐式转换 不能从const char* 到string再用构造函数
 在构造函数前加上explicit使得该函数的使用必须为显式转换
 
-头文件里只除去函数实现就行   记得分号放在函数后面 使用时要包含头文件
-函数实现单独放在另外的文件 但是成员函数要在前面添上类的作用域
-
 public  公共权限 成员 类内可以访问 类外也可以访问      访问即更改和使用
 protected 保护权限 类内可以访问 类外不可访问  子类可以访问
 private  私有权限  类内可以访问 类外不可访问  子类不可以访问 成员函数可以访问同类所有对象的私有成员
@@ -233,7 +351,7 @@ struct默认权限是公共 class默认权限是私有
 现在可用fun(10) 或者 fun(10,20)  函数声明和函数实现只能有一个有默认参数
 int fun(int a,int=10) 这里是一个占位参数 调用时也要传值 或者用默认参数
 函数重载 返回值类型是不能作为重载条件的 只能有参数的不同 但本质还是要看函数调用是否出现二义性
-
+## 数据流、数组和基本类型
 system("cls");  清除控制台屏幕  system("pause");       按任意键继续
 int *p=new int(10)  在堆区开辟一个空间里面的值是10并返回指针 也可以不写10和括号 delete p 释放堆区数据 
 int *arr=new int[10] 开辟数组空间  delete[] arr 释放数组空间
